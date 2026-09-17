@@ -1,0 +1,19 @@
+{
+  "stm32": {
+    "version": 1,
+    "url": "stm32_1.bin",
+    "size": 41396,
+    "sha256": "6f5235496376457422aba00b2ae1a660a04e88b87fb395ab9b41ec24d9873db3"
+  },
+  "cme": {
+    "version": "2.4.2",
+    "min_bootloader": 15,
+    "variants": {
+      "DIN_AC2_DC2_NO-TLS": {
+        "url": "cme_2.4.2_DIN_AC2_DC2_NO-TLS.srec",
+        "size": 1090765,
+        "sha256": "2934eb1557bf0c9307bf01435d3568827751eaa48bc6fed3e17ca6bcedab1dd7"
+      }
+    }
+  }
+}

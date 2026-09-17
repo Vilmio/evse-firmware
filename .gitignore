@@ -1,0 +1,23 @@
+# macOS / editory
+.DS_Store
+._*
+.vscode/
+.idea/
+*.swp
+
+# pracovni vystupy - do repa patri jen hotove obrazy a manifest
+dist/
+tmp/
+*.tmp
+*.log
+
+# mezivysledky buildu (nahrava se jen .bin / .srec)
+*.elf
+*.map
+*.list
+*.hex
+*.o
+*.d
+*.su
+*.cyclo
+__pycache__/
