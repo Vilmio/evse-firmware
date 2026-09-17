@@ -27,6 +27,6 @@ min_bootloader = 15
 
 # Komunikační modul ESP32 - micropython.bin z buildu (ne firmware.bin).
 # Verze = VERSION v ESP32_APP/backend/version.py. Odkomentovat, až bude obraz v repu.
-# [esp]
-# version = "0.2.0"
-# file = "esp_0.2.0.bin"
+[esp]
+version = "0.1.1"
+file = "esp_0.1.1.bin"
