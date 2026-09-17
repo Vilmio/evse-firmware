@@ -1,7 +1,7 @@
 {
   "stm32": {
     "version": 1,
-    "url": "stm32_1.bin",
+    "url": "stm32_2.bin",
     "size": 41396,
     "sha256": "6f5235496376457422aba00b2ae1a660a04e88b87fb395ab9b41ec24d9873db3"
   },
