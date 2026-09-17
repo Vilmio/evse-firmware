@@ -1,0 +1,32 @@
+# Verze firmwaru ve vydání - UPRAVUJE SE RUČNĚ.
+#
+# Po pushnutí tagu (git tag v0.0.3 && git push origin v0.0.3) z tohoto souboru
+# GitHub Actions vygeneruje manifest.json, zkontroluje obrazy a vytvoří release.
+# Náhled a kontrola na počítači: python3 tools/build_manifest.py
+#
+# Pravidla:
+# - každý release obsahuje VŠECHNY obrazy (stanice čte jen poslední release),
+# - změněný soubor musí mít VYŠŠÍ verzi (jinak build selže),
+# - `file` je název souboru v kořeni repa; stejně se bude jmenovat asset v release.
+
+# Řídicí jednotka STM32 - aplikace od 0x08005000 (bez bootloaderu), build Release.
+# Verze = FW_VERSION v firmware/cme_evse/Core/Inc/config.h (registr 101), celé číslo.
+[stm32]
+version = 2
+file = "stm32_2.bin"
+
+# Nabíjecí modul chargebyte CME - šifrovaný .srec z release chargebyte.
+# min_bootloader = nejnižší verze bootloaderu CME, se kterou update poběží.
+# Klíč varianty musí odpovídat nastavení CME_VARIANT na ESP.
+[cme]
+version = "2.4.2"
+min_bootloader = 15
+
+[cme.variants]
+"DIN_AC2_DC2_NO-TLS" = "cme_2.4.2_DIN_AC2_DC2_NO-TLS.srec"
+
+# Komunikační modul ESP32 - micropython.bin z buildu (ne firmware.bin).
+# Verze = VERSION v ESP32_APP/backend/version.py. Odkomentovat, až bude obraz v repu.
+# [esp]
+# version = "0.2.0"
+# file = "esp_0.2.0.bin"

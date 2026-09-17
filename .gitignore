@@ -21,3 +21,6 @@ tmp/
 *.su
 *.cyclo
 __pycache__/
+
+# generuje tools/build_manifest.py (GitHub Actions pri tagu)
+manifest.json

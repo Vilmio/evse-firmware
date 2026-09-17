@@ -1,0 +1,55 @@
+# Po pushnutí tagu v* vygeneruje z firmware.toml manifest.json a vytvoří GitHub Release
+# se všemi obrazy. Tag s pomlčkou (v0.0.3-rc1) = pre-release: stanice ho přes
+# releases/latest nestáhnou, testovací stanice ho dostane přes .../releases/download/<tag>/.
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Manifest posledního vydaného (ne pre-)release - kontrola, že verze stoupají
+      - name: Download previous manifest
+        run: |
+          previous=$(gh api "repos/${GITHUB_REPOSITORY}/releases/latest" --jq .tag_name 2>/dev/null || true)
+          if [ -n "$previous" ] && [ "$previous" != "$TAG" ]; then
+            echo "Previous release: $previous"
+            gh release download "$previous" --pattern manifest.json --dir previous || echo "no manifest in $previous"
+          else
+            echo "No previous release to compare with"
+          fi
+
+      - name: Build manifest and check images
+        run: python tools/build_manifest.py --previous previous/manifest.json --out dist
+
+      - name: Publish release
+        run: |
+          prerelease=""
+          case "$TAG" in *-*) prerelease="--prerelease" ;; esac
+          notes=$(python -c 'import json; m = json.load(open("dist/manifest.json")); print("\n".join("- **{}** {}".format(k.upper(), v["version"]) for k, v in m.items()))')
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG exists - replacing assets"
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" dist/* --title "$TAG" --notes "$notes" $prerelease --verify-tag
+          fi
