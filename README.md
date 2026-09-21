@@ -18,6 +18,7 @@ jsou v soukromém repu `Vilmio/chargebyte_evse`.
 | `esp_<verze>.bin` | aplikace ESP32 pro OTA (`micropython.bin`, ne `firmware.bin`), verze = `VERSION` v `ESP32_APP/backend/version.py` |
 | `tools/build_manifest.py` | z `firmware.toml` vytvoří `dist/` s `manifest.json` a obrazy, zkontroluje je |
 | `.github/workflows/release.yml` | po pushnutí tagu `v*` sestaví a vydá GitHub Release |
+| `.github/workflows/prune.yml`, `tools/prune_releases.sh` | po vydání ponechá jen poslední 3 tagy a releasy |
 
 `manifest.json` se do repa necommituje - generuje se při každém vydání.
 
@@ -66,6 +67,12 @@ https://github.com/Vilmio/evse-firmware/releases/latest/download/manifest.json
 `releases/latest` na něj neukazuje, stanice ho nestáhnou. Testovací stanici nastavte
 `UPDATE_URL` na `https://github.com/Vilmio/evse-firmware/releases/download/v0.0.3-rc1/manifest.json`.
 Po ověření vydejte stejný obsah s normálním tagem.
+
+**Úklid:** po každém úspěšném vydání akce *Prune releases* ponechá jen **poslední 3 tagy
+a jejich releasy** (podle čísla verze), starší smaže i s tagem. Release označený jako
+**Latest se nesmaže nikdy**, ani když ho předběhnou novější pre-releasy. Ručně: *Actions →
+Prune releases → Run workflow* (počet a „dry run“ jen pro výpis). Lokálně bez mazání:
+`KEEP=3 DRY_RUN=1 GH_REPO=Vilmio/evse-firmware tools/prune_releases.sh` (potřebuje `gh`).
 
 **Kontroly při vydání** (release se nevytvoří, chyba je v logu Actions):
 - soubor existuje a má správný formát: ESP obraz `0xE9`, STM32 vektorová tabulka pro 0x08005000, CME S-record,

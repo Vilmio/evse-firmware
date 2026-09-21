@@ -1,0 +1,43 @@
+# Uklid: ponecha jen posledni 3 tagy v* a jejich releasy (tools/prune_releases.sh).
+# Release oznaceny jako Latest se nikdy nemaze - stanice z nej stahuji aktualizace.
+#
+# Spousti se samo po uspesnem workflow Release, nebo rucne (Actions -> Prune releases
+# -> Run workflow), kde jde zapnout "dry run" a jen se podivat, co by se smazalo.
+name: Prune releases
+
+on:
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      keep:
+        description: "How many newest tags/releases to keep"
+        default: "3"
+        required: true
+      dry_run:
+        description: "Only list what would be deleted"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  prune:
+    # po neuspesnem vydani nic nemazat
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      KEEP: ${{ inputs.keep || '3' }}
+      DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Delete old releases and tags
+        run: bash tools/prune_releases.sh
