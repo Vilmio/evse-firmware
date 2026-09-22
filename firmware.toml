@@ -12,7 +12,7 @@
 # Řídicí jednotka STM32 - aplikace od 0x08005000 (bez bootloaderu), build Release.
 # Verze = FW_VERSION v firmware/cme_evse/Core/Inc/config.h (registr 101), celé číslo.
 [stm32]
-version = 3
+version = 5
 file = "cme_evse.bin"
 
 # Nabíjecí modul chargebyte CME - šifrovaný .srec z release chargebyte.
@@ -28,5 +28,5 @@ min_bootloader = 15
 # Komunikační modul ESP32 - micropython.bin z buildu (ne firmware.bin).
 # Verze = VERSION v ESP32_APP/backend/version.py. Odkomentovat, až bude obraz v repu.
 [esp]
-version = "0.1.3"
-file = "esp_0.1.3.bin"
+version = "0.1.4"
+file = "esp_0.1.4.bin"
