@@ -12,7 +12,7 @@
 # Řídicí jednotka STM32 - aplikace od 0x08005000 (bez bootloaderu), build Release.
 # Verze = FW_VERSION v firmware/cme_evse/Core/Inc/config.h (registr 101), celé číslo.
 [stm32]
-version = 5
+version = 7
 file = "cme_evse.bin"
 
 # Nabíjecí modul chargebyte CME - šifrovaný .srec z release chargebyte.
